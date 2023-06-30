@@ -48,8 +48,6 @@ y_test20 = test20.finishing_position
 y_test21 = test21.finishing_position
 y_test22 = test22.finishing_position
 
-#xv3b_train.to_excel('xv3b_train.xlsx', index= False)
-
 # RACE PREDICT INPUT
 
 pred_race = pd.read_csv('predict-race.csv')
