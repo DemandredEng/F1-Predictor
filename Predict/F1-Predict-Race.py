@@ -74,8 +74,6 @@ columns_to_drop_V3b = ['driver_points', 'constructor_points', 'driver_points_pre
 pred_race.drop(columns_to_drop_V3b, axis=1, inplace=True)
 x_pred_race = pred_race.drop(['driver', 'nationality', 'constructor'], axis=1)
 
-#x_pred_race.to_excel('x_pred_race.xlsx', index= False)
-
 # LINEAR REGRESSION MODEL, FINAL PREDICTED POSITIONS RANKED.
 
 def Linear_Regression_Predictor(x_train, testyr, x_testyr, titl):
