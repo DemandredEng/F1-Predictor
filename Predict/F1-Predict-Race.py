@@ -22,7 +22,7 @@ dfV3b['constructor_points_percentage'] = dfV3b['constructor_points'] / highest_v
 dfV3b['driver_points_percentage'] = dfV3b['driver_points_percentage'].fillna(0)
 dfV3b['constructor_points_percentage'] = dfV3b['constructor_points_percentage'].fillna(0)
 
-# prev season
+# Previous Season
 grouped = dfV3b.groupby(['season', 'round'])
 highest_values = grouped[['driver_points_prev_season', 'constructor_points_prev_season']].transform('max')
 dfV3b['driver_points_prev_season_percentage'] = dfV3b['driver_points_prev_season'] / highest_values['driver_points_prev_season'] 
@@ -48,7 +48,7 @@ y_test20 = test20.finishing_position
 y_test21 = test21.finishing_position
 y_test22 = test22.finishing_position
 
-# RACE PREDICT INPUT
+# Race Prediction Input
 
 pred_race = pd.read_csv('predict-race.csv')
 pred_race.drop(['driver_wins_prev_season', 'constructor_wins_prev_season', 'driver_age'], axis=1, inplace = True)
