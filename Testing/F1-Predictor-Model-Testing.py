@@ -8,7 +8,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import TimeSeriesSplit, cross_val_score
 from sklearn.neural_network import MLPRegressor
 
-# Data collected using the Ergast F1 API and the official F1 website
+# Data collected using the Ergast F1 API and the Official F1 website
 
 data = pd.read_csv('df_f1.csv')
 df = data.copy()
@@ -25,7 +25,7 @@ dfV3b['constructor_points_percentage'] = dfV3b['constructor_points'] / highest_v
 dfV3b['driver_points_percentage'] = dfV3b['driver_points_percentage'].fillna(0)
 dfV3b['constructor_points_percentage'] = dfV3b['constructor_points_percentage'].fillna(0)
 
-# prev season
+# Previous Season
 grouped = dfV3b.groupby(['season', 'round'])
 highest_values = grouped[['driver_points_prev_season', 'constructor_points_prev_season']].transform('max')
 dfV3b['driver_points_prev_season_percentage'] = dfV3b['driver_points_prev_season'] / highest_values['driver_points_prev_season'] 
