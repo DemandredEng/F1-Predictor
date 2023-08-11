@@ -13,7 +13,7 @@ df.rename(columns={'podium': 'finishing_position'}, inplace=True)
 df.drop(['driver_wins_prev_season', 'constructor_wins_prev_season', 'driver_age'], axis=1, inplace = True)
 
 # Version 3b - For my reference
-
+# Calculate percentage of driver and constructor points based on highest values within each season and round
 dfV3b = df.copy()
 grouped = dfV3b.groupby(['season', 'round'])
 highest_values = grouped[['driver_points', 'constructor_points']].transform('max')
@@ -22,7 +22,7 @@ dfV3b['constructor_points_percentage'] = dfV3b['constructor_points'] / highest_v
 dfV3b['driver_points_percentage'] = dfV3b['driver_points_percentage'].fillna(0)
 dfV3b['constructor_points_percentage'] = dfV3b['constructor_points_percentage'].fillna(0)
 
-# Previous Season
+# Calculate percentage of driver and constructor points from the previous season
 grouped = dfV3b.groupby(['season', 'round'])
 highest_values = grouped[['driver_points_prev_season', 'constructor_points_prev_season']].transform('max')
 dfV3b['driver_points_prev_season_percentage'] = dfV3b['driver_points_prev_season'] / highest_values['driver_points_prev_season'] 
@@ -30,14 +30,18 @@ dfV3b['constructor_points_prev_season_percentage'] = dfV3b['constructor_points_p
 dfV3b['driver_points_prev_season_percentage'] = dfV3b['driver_points_prev_season_percentage'].fillna(0)
 dfV3b['constructor_points_prev_season_percentage'] = dfV3b['constructor_points_prev_season_percentage'].fillna(0)
 
+# Drop unnecessary columns
 columns_to_drop_V3b = ['driver_points', 'constructor_points', 'driver_points_prev_season', 'constructor_points_prev_season']
 dfV3b.drop(columns_to_drop_V3b, axis=1, inplace=True)
 
+
+# Split the data into training and testing sets based on season
 train = dfV3b[dfV3b.season < 2020]
 test20 = dfV3b[dfV3b['season'] == 2020]
 test21 = dfV3b[dfV3b['season'] == 2021]
 test22 = dfV3b[dfV3b['season'] == 2022]
 
+# Prepare feature sets for training and testing
 xv3b_train = train.drop(['driver', 'nationality', 'constructor',  'finishing_position'], axis = 1)
 xv3b_test20 = test20.drop(['driver', 'nationality', 'constructor',  'finishing_position'], axis=1)
 xv3b_test21 = test21.drop(['driver', 'nationality', 'constructor',  'finishing_position'], axis=1)
@@ -49,10 +53,11 @@ y_test21 = test21.finishing_position
 y_test22 = test22.finishing_position
 
 # Race Prediction Input
-
+# Load data for race prediction
 pred_race = pd.read_csv('predict-race.csv')
 pred_race.drop(['driver_wins_prev_season', 'constructor_wins_prev_season', 'driver_age'], axis=1, inplace = True)
 
+# Calculate percentage of driver and constructor points for the prediction dataset
 grouped = pred_race.groupby(['season', 'round'])
 highest_values = grouped[['driver_points', 'constructor_points']].transform('max')
 pred_race['driver_points_percentage'] = pred_race['driver_points'] / highest_values['driver_points'] 
@@ -60,7 +65,7 @@ pred_race['constructor_points_percentage'] = pred_race['constructor_points'] / h
 pred_race['driver_points_percentage'] = pred_race['driver_points_percentage'].fillna(0)
 pred_race['constructor_points_percentage'] = pred_race['constructor_points_percentage'].fillna(0)
 
-# prev season
+# Calculate percentage of driver and constructor points from the previous season for the prediction dataset
 grouped = pred_race.groupby(['season', 'round'])
 highest_values = grouped[['driver_points_prev_season', 'constructor_points_prev_season']].transform('max')
 pred_race['driver_points_prev_season_percentage'] = pred_race['driver_points_prev_season'] / highest_values['driver_points_prev_season'] 
@@ -68,11 +73,12 @@ pred_race['constructor_points_prev_season_percentage'] = pred_race['constructor_
 pred_race['driver_points_prev_season_percentage'] = pred_race['driver_points_prev_season_percentage'].fillna(0)
 pred_race['constructor_points_prev_season_percentage'] = pred_race['constructor_points_prev_season_percentage'].fillna(0)
 
+# Prepare feature set for race prediction
 columns_to_drop_V3b = ['driver_points', 'constructor_points', 'driver_points_prev_season', 'constructor_points_prev_season']
 pred_race.drop(columns_to_drop_V3b, axis=1, inplace=True)
 x_pred_race = pred_race.drop(['driver', 'nationality', 'constructor'], axis=1)
 
-# LINEAR REGRESSION MODEL, FINAL PREDICTED POSITIONS RANKED.
+# LINEAR REGRESSION MODEL, final predicted positions ranked.
 
 def Linear_Regression_Predictor(x_train, testyr, x_testyr, titl):
 
@@ -86,7 +92,7 @@ def Linear_Regression_Predictor(x_train, testyr, x_testyr, titl):
 Linear_Regression_Predictor(xv3b_train, pred_race, x_pred_race, 'Linear Regression Predictions')
 
 
-# MLP REGRESSOR
+# MLP REGRESSOR MODEL, final predicted positions ranked.
 
 def MLP_Predictor(mlp_model, testyr, x_testyr, titl):
     mlp_pred = testyr[['season', 'round', 'driver']].copy()
